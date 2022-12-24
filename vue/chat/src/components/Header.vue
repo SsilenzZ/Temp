@@ -9,14 +9,14 @@
     height="32"
     class="logo-icon"
   />
-    <b class="text-bar">Web-chat</b>
+    <v-divider vertical></v-divider>
+    <span class="text-bar">Web-chat</span>
   </v-app-bar>
 </template>
 
 <script>
 export default {
-  // eslint-disable-next-line vue/multi-word-component-names
-  name: 'Header'
+  name: 'HeaderComponent'
 }
 </script>
 
@@ -29,6 +29,7 @@ export default {
 .text-bar {
   font-size: x-large;
   padding: 5px;
+  margin-left: 10px;
   color: #FFFFFFB3;
 }
 </style>
