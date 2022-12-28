@@ -4,7 +4,7 @@ export function jwtVerify (jwt) {
     const now = new Date()
     if (now.getTime() > item.expire) {
       localStorage.removeItem('jwt')
-      alert('Token of session is expired')
+      alert('The session has been ended up')
       return false
     }
     return item.value

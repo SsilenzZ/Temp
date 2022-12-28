@@ -1,7 +1,7 @@
 package users
 
 import (
-	"Web-chat/pkg/service"
+	"Web-chat/pkg/services"
 	"gorm.io/gorm"
 )
 
@@ -22,7 +22,7 @@ func (u UserRepository) GetHashedPassword(email, password string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	err = service.BcryptHasher{}.CheckPasswordHash(password, user.Password)
+	err = services.BcryptHasher{}.CheckPasswordHash(password, user.Password)
 	if err != nil {
 		return 0, err
 	}
@@ -47,4 +47,13 @@ func (u UserRepository) CreateUser(email, password string, name string) bool {
 	user.Name = name
 	u.DB.Select("email", "password", "name").Create(&user)
 	return true
+}
+
+func (u *UserRepository) Find(name string) ([]User, error) {
+	var user []User
+	err := u.DB.Where("name LIKE ? LIMIT 20", "%"+name+"%").Find(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }

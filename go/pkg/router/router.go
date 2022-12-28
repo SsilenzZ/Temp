@@ -1,13 +1,13 @@
 package router
 
 import (
-	"Web-chat/pkg/handler"
-	"Web-chat/pkg/service"
+	"Web-chat/pkg/handlers"
+	"Web-chat/pkg/services"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func New(authHandler *handler.AuthHandler) *echo.Echo {
+func New(authHandler *handlers.AuthHandler, userHandler *handlers.UserHandler) *echo.Echo {
 	e := echo.New()
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -18,13 +18,13 @@ func New(authHandler *handler.AuthHandler) *echo.Echo {
 	e.POST("/sign-up", authHandler.SignUp)
 	e.POST("/sign-in", authHandler.SignIn)
 
-	a := e.Group("/a")
+	j := e.Group("/jwt")
 	config := middleware.JWTConfig{
-		Claims:     &service.JWTCustomClaims{},
+		Claims:     &services.JWTCustomClaims{},
 		SigningKey: []byte("secret"),
 	}
 
-	a.Use(middleware.JWTWithConfig(config))
-	a.POST("/hello", handler.Hello)
+	j.Use(middleware.JWTWithConfig(config))
+	j.POST("/find", userHandler.Find)
 	return e
 }

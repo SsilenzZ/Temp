@@ -1,20 +1,20 @@
-package handler
+package handlers
 
 import (
-	"Web-chat/pkg/db/repository/user"
+	"Web-chat/pkg/db/repositories/user"
 	"Web-chat/pkg/requests"
-	"Web-chat/pkg/service"
+	"Web-chat/pkg/services"
 	"github.com/labstack/echo/v4"
 	"log"
 	"net/http"
 )
 
 type AuthHandler struct {
-	Hasher service.HasherI
-	Jwt    service.JwtI
+	Hasher services.HasherI
+	Jwt    services.JwtI
 }
 
-func NewAuthHandler(hasher service.HasherI, jwt service.JwtI) AuthHandler {
+func NewAuthHandler(hasher services.HasherI, jwt services.JwtI) AuthHandler {
 	return AuthHandler{Hasher: hasher, Jwt: jwt}
 }
 
@@ -49,6 +49,6 @@ func (h AuthHandler) SignIn(c echo.Context) error {
 	}
 	t := h.Jwt.GenerateAccessToken(id)
 	return c.JSON(http.StatusOK, map[string]string{
-		"token": t,
+		"jwt": t,
 	})
 }

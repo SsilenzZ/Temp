@@ -1,8 +1,7 @@
 <template>
   <v-app-bar
-    color=#1E1E1E
-    elevation="7"
-    rounded
+    color="grey-lighten-4"
+    dense
   ><v-img
     :src="require('../assets/logo-32x32.png')"
     contain
@@ -23,11 +22,11 @@ export default {
 <style scoped>
 
 .logo-icon {
-  max-width: 32px;
+  max-width: 24px;
   margin-right: 15px;
 }
 .text-bar {
-  font-size: x-large;
+  font-size: large;
   padding: 5px;
   margin-left: 10px;
   color: #FFFFFFB3;

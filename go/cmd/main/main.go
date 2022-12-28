@@ -2,15 +2,16 @@ package main
 
 import (
 	_ "Web-chat/config"
-	"Web-chat/pkg/handler"
+	"Web-chat/pkg/handlers"
 	"Web-chat/pkg/router"
-	"Web-chat/pkg/service"
+	"Web-chat/pkg/services"
 	"os"
 )
 
 func main() {
-	authHandler := handler.NewAuthHandler(service.BcryptHasher{Cost: 5}, service.Jwt{})
-	e := router.New(&authHandler)
+	authHandler := handlers.NewAuthHandler(services.BcryptHasher{Cost: 5}, services.Jwt{})
+	userHandler := handlers.UserHandler{}
+	e := router.New(&authHandler, &userHandler)
 
 	e.Logger.Fatal(e.Start(os.Getenv("SERVER_PORT")))
 }
