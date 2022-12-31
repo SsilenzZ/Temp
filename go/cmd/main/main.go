@@ -11,7 +11,8 @@ import (
 func main() {
 	authHandler := handlers.NewAuthHandler(services.BcryptHasher{Cost: 5}, services.Jwt{})
 	userHandler := handlers.UserHandler{}
-	e := router.New(&authHandler, &userHandler)
+	socialHandler := handlers.SocialHandler{}
+	e := router.New(&authHandler, &userHandler, &socialHandler)
 
 	e.Logger.Fatal(e.Start(os.Getenv("SERVER_PORT")))
 }

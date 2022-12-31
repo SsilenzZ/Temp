@@ -7,7 +7,6 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"net/http"
-	"strconv"
 )
 
 type UserHandler struct {
@@ -15,11 +14,13 @@ type UserHandler struct {
 
 func (h UserHandler) Find(c echo.Context) error {
 	var user_ requests.Find
+	cUser := c.Get("user").(*jwt.Token)
+	claims := cUser.Claims.(*services.JWTCustomClaims)
 	err := c.Bind(&user_)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	foundUsers, err := user.Repository.Find(user_.Name)
+	foundUsers, err := user.Repository.Find(user_.Name, claims.ID)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
@@ -30,12 +31,4 @@ func (h UserHandler) Find(c echo.Context) error {
 		users[i] = map[string]interface{}{"id": foundUsers[i].ID, "name": foundUsers[i].Name}
 	}
 	return c.JSON(http.StatusOK, users)
-}
-
-func (h UserHandler) GetID(c echo.Context) error {
-	cUser := c.Get("user").(*jwt.Token)
-	claims := cUser.Claims.(*services.JWTCustomClaims)
-	id := claims.ID
-
-	return c.String(http.StatusOK, strconv.Itoa(id))
 }

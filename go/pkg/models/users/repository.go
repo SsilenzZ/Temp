@@ -37,7 +37,6 @@ func (u UserRepository) CreateUser(email, password string, name string) bool {
 			return false
 		}
 		user.Password = password
-		name = "test"
 		user.Name = name
 		u.DB.Save(&user)
 		return true
@@ -49,11 +48,17 @@ func (u UserRepository) CreateUser(email, password string, name string) bool {
 	return true
 }
 
-func (u *UserRepository) Find(name string) ([]User, error) {
+func (u UserRepository) Find(name string, id int) ([]User, error) {
 	var user []User
-	err := u.DB.Where("name LIKE ? LIMIT 20", "%"+name+"%").Find(&user).Error
+	err := u.DB.Where("name LIKE ? AND id != ? LIMIT 20", "%"+name+"%", id).Find(&user).Error
 	if err != nil {
 		return nil, err
 	}
 	return user, nil
+}
+
+func (u UserRepository) GetById(id int) (int, string, error) {
+	var user User
+	err := u.DB.Where("id = ?", id).Take(&user).Error
+	return user.ID, user.Name, err
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func New(authHandler *handlers.AuthHandler, userHandler *handlers.UserHandler) *echo.Echo {
+func New(authHandler *handlers.AuthHandler, userHandler *handlers.UserHandler, socialHandler *handlers.SocialHandler) *echo.Echo {
 	e := echo.New()
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -26,5 +26,12 @@ func New(authHandler *handlers.AuthHandler, userHandler *handlers.UserHandler) *
 
 	j.Use(middleware.JWTWithConfig(config))
 	j.POST("/find", userHandler.Find)
+
+	j.POST("/friend", socialHandler.Friend)
+	j.POST("/unfriend", socialHandler.Unfriend)
+	j.GET("/friends", socialHandler.GetFriends)
+	j.POST("/block", socialHandler.Block)
+	j.POST("/unblock", socialHandler.Unblock)
+	j.GET("/blacklist", socialHandler.GetBlacklist)
 	return e
 }
