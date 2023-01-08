@@ -7,7 +7,8 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func New(authHandler *handlers.AuthHandler, userHandler *handlers.UserHandler, socialHandler *handlers.SocialHandler) *echo.Echo {
+func New(authHandler *handlers.AuthHandler, userHandler *handlers.UserHandler, socialHandler *handlers.SocialHandler,
+	wsHandler *handlers.WsHandler, msgHandler *handlers.MessageHandler) *echo.Echo {
 	e := echo.New()
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -17,6 +18,7 @@ func New(authHandler *handlers.AuthHandler, userHandler *handlers.UserHandler, s
 
 	e.POST("/sign-up", authHandler.SignUp)
 	e.POST("/sign-in", authHandler.SignIn)
+	e.GET("/ws/:Authorization", wsHandler.Websocket)
 
 	j := e.Group("/jwt")
 	config := middleware.JWTConfig{
@@ -33,5 +35,9 @@ func New(authHandler *handlers.AuthHandler, userHandler *handlers.UserHandler, s
 	j.POST("/block", socialHandler.Block)
 	j.POST("/unblock", socialHandler.Unblock)
 	j.GET("/blacklist", socialHandler.GetBlacklist)
+
+	j.GET("/chats/:id", msgHandler.GetChat)
+	j.GET("/chatspreview", msgHandler.GetChatsPreview)
+
 	return e
 }

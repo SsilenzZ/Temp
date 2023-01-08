@@ -5,7 +5,7 @@
     tile
   >
     <div style="flex-basis: 20%">
-      <v-toolbar>
+      <v-toolbar class="tb2">
         <v-spacer></v-spacer>
         <v-btn icon>
           <v-icon>mdi-dots-vertical</v-icon>
@@ -17,10 +17,15 @@
 
 <script>
 export default {
-  name: 'Toolbar2Component'
+  name: 'Toolbar2Comp'
 }
 </script>
 
 <style scoped>
-
+.tb2, .v-toolbar__content {
+  height: 64px !important;
+}
+.row {
+  margin: 0 !important;
+}
 </style>

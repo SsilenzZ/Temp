@@ -1,11 +1,10 @@
 <template>
   <v-card
     color="grey lighten-4"
-    height="200px"
     tile
   >
     <div>
-      <v-toolbar>
+      <v-toolbar class="tb1">
         <v-app-bar-nav-icon></v-app-bar-nav-icon>
         <v-autocomplete
           clearable
@@ -18,7 +17,7 @@
           item-value="id"
           prepend-icon="mdi-magnify"
           class="search"
-          color=#6200EE
+          color=#5110e7
           label="Enter user`s name to search"
         >
           <template v-slot:no-data>
@@ -30,7 +29,7 @@
           </template>
           <template v-slot:item="{ item }">
             <v-list-item-avatar
-              color=#6200EE
+              color=#5110e7
               class="text-h5 font-weight-light white--text"
             >
               {{ item.name.charAt(0) }}
@@ -45,7 +44,7 @@
                   <v-col>
                     <v-row>
                       <v-btn
-                        color=#6200EE
+                        color=#5110e7
                         class="friend"
                         @click="friendUser(item.id)"
                       >
@@ -58,8 +57,8 @@
                         @click="blockUser(item.id)"
                       >
                         <v-icon
-                          color=#6200EE
-                        >mdi-minus-circle-outline
+                          color=#5110e7
+                        >mdi-lock-outline
                         </v-icon>
                         &nbsp;Block
                       </v-btn>
@@ -75,11 +74,10 @@
 </template>
 
 <script>
-import { jwtVerify } from '@/utilities/jwt-verify'
 import axios from 'axios'
 
 export default {
-  name: 'Toolbar1Component',
+  name: 'Toolbar1Comp',
   data () {
     return {
       model: null,
@@ -87,12 +85,6 @@ export default {
       loading: false,
       search: null,
       users: []
-    }
-  },
-
-  created () {
-    if (jwtVerify(localStorage.getItem('jwt'))) {
-      this.$router.push('/')
     }
   },
 
@@ -106,16 +98,23 @@ export default {
     }
   },
 
+  // eslint-disable-next-line vue/no-dupe-keys
+  props: ['jwt'],
+
   methods: {
-    jwtVerify,
+    addFriend (v) {
+      this.$emit('addFriend', v)
+    },
+    block (v) {
+      this.$emit('block', v)
+    },
     async findUser (login) {
       this.loading = true
-      const token = localStorage.getItem('jwt')
       await axios({
         method: 'post',
         url: process.env.VUE_APP_API_URL + '/jwt/find',
         headers: {
-          Authorization: 'Bearer ' + token.replace(/"/g, '')
+          Authorization: 'Bearer ' + this.jwt
         },
         data: {
           name: login
@@ -129,12 +128,11 @@ export default {
     },
 
     async friendUser (id) {
-      const token = localStorage.getItem('jwt')
       const response = await axios({
         method: 'post',
         url: process.env.VUE_APP_API_URL + '/jwt/friend',
         headers: {
-          Authorization: 'Bearer ' + token.replace(/"/g, '')
+          Authorization: 'Bearer ' + this.jwt
         },
         data: {
           id2: id
@@ -142,23 +140,21 @@ export default {
       })
         .catch(function (error) {
           if (error.response) {
-            alert('This user already your friend')
+            alert('This user already your friend/blocked')
           }
         })
 
       if (response !== undefined) {
-        alert('Success')
-        window.location.reload()
+        this.addFriend(response.data)
       }
     },
 
     async blockUser (id) {
-      const token = localStorage.getItem('jwt')
       const response = await axios({
         method: 'post',
         url: process.env.VUE_APP_API_URL + '/jwt/block',
         headers: {
-          Authorization: 'Bearer ' + token.replace(/"/g, '')
+          Authorization: 'Bearer ' + this.jwt
         },
         data: {
           id2: id
@@ -166,12 +162,11 @@ export default {
       })
         .catch(function (error) {
           if (error.response) {
-            alert('This user already in your Blacklist')
+            alert('This user already blocked')
           }
         })
       if (response !== undefined) {
-        alert('Success')
-        window.location.reload()
+        this.block(response.data)
       }
     }
   }
@@ -179,6 +174,9 @@ export default {
 </script>
 
 <style scoped>
+.tb1, .v-toolbar__content {
+  height: 64px !important;
+}
 .friend, .block {
   flex: 1 0 5%;
   padding: 0 16px;
@@ -195,5 +193,11 @@ export default {
   width: 60px !important;
   height: 60px !important;
   font-size: 2rem !important;
+}
+.v-input__slot {
+  color: #FFFFFFB3 !important;
+}
+.row {
+  margin: 0 !important;
 }
 </style>

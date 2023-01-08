@@ -7,7 +7,7 @@ export function jwtVerify (jwt) {
       alert('The session has been ended up')
       return false
     }
-    return item.value
+    return item.value.replace(/"/g, '')
   }
   return false
 }

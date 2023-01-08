@@ -17,7 +17,7 @@ export default {
     Header
   },
   mounted () {
-    document.title = 'Web-chat'
+    document.title = 'Web-chats'
   }
 }
 

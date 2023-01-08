@@ -1,18 +1,18 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HelloView from '@/views/HelloView'
-import HomeView from '@/views/HomeView'
+import AuthView from '@/views/Auth'
+import MainView from '@/views/Main'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    component: HelloView
+    component: AuthView
   },
   {
     path: '/home',
-    component: HomeView
+    component: MainView
   }
 ]
 

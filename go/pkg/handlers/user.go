@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"Web-chat/pkg/db/repositories/user"
+	"Web-chat/pkg/db/init/user"
 	"Web-chat/pkg/requests"
 	"Web-chat/pkg/services"
 	"github.com/golang-jwt/jwt"
@@ -20,7 +20,7 @@ func (h UserHandler) Find(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	foundUsers, err := user.Repository.Find(user_.Name, claims.ID)
+	foundUsers, err := user.UserRepository.Find(user_.Name, claims.ID)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}

@@ -20,7 +20,7 @@
           <template v-slot:activator="{ on, attrs }">
             <v-btn
               bottom
-              color=#6200EE
+              color=#5110e7
               v-bind="attrs"
               v-on="on"
               class="start"
@@ -38,7 +38,7 @@
               ><v-tabs
                 v-model="tab"
                 background-color=#1E1E1E
-                color=#6200EE
+                color=#5110e7
                 dark
                 centered
                 @change="changeTab"
@@ -51,7 +51,7 @@
                 </v-tab>
               </v-tabs>
                 <v-icon
-                  color=#6200EE
+                  color=#5110e7
                   size=150px
                   class="icon"
                 >mdi-account-box</v-icon>
@@ -63,7 +63,7 @@
                         <v-text-field :rules="[rules.required, rules.max, rules.email]"
                                       outlined
                                       v-model="login"
-                                      color=#6200EE
+                                      color=#5110e7
                                       label="Enter your email here"
                                       class="text-field"
                         ></v-text-field>
@@ -73,7 +73,7 @@
                                       v-model="password"
                                       :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                                       :type="show1 ? 'text' : 'password'"
-                                      color=#6200EE
+                                      color=#5110e7
                                       label="Enter your password here"
                                       class="text-field"
                                       @click:append="show1 = !show1"
@@ -88,7 +88,7 @@
                         <v-text-field :rules="[rules.required, rules.max, rules.email]"
                                       outlined
                                       v-model="login"
-                                      color=#6200EE
+                                      color=#5110e7
                                       label="Enter your email here"
                                       class="text-field"
                         ></v-text-field>
@@ -98,7 +98,7 @@
                                       v-model="password"
                                       :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                                       :type="show1 ? 'text' : 'password'"
-                                      color=#6200EE
+                                      color=#5110e7
                                       label="Enter your password here"
                                       class="text-field"
                                       @click:append="show1 = !show1"
@@ -109,7 +109,7 @@
                                       v-model="confirm"
                                       :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
                                       :type="show2 ? 'text' : 'password'"
-                                      color=#6200EE
+                                      color=#5110e7
                                       label="Repeat your password here"
                                       class="text-field"
                                       @click:append="show2 = !show2"
@@ -124,7 +124,7 @@
                 v-if="!signup"
                 height=60px;
                 width=120px;
-                color=#6200EE
+                color=#5110e7
                 class="button"
                 @click = "Auth"
               >
@@ -136,7 +136,7 @@
                 v-else
                 height=60px;
                 width=120px;
-                color=#6200EE
+                color=#5110e7
                 class="button"
                 @click = "Auth"
               >
@@ -156,7 +156,7 @@ import axios from 'axios'
 import { jwtVerify } from '@/utilities/jwt-verify'
 
 export default {
-  name: 'HelloView',
+  name: 'AuthView',
 
   data () {
     return {
@@ -187,7 +187,7 @@ export default {
         },
         repeat: [
           v => !!v || 'Confirm your password',
-          v => v === this.password || 'The password does not match.'
+          v => v === this.password || 'The passwords do not match.'
         ]
       }
     }
@@ -195,7 +195,7 @@ export default {
 
   created () {
     if (jwtVerify(localStorage.getItem('jwt'))) {
-      this.$router.push('/')
+      this.$router.push('/home')
     }
   },
 
@@ -230,9 +230,13 @@ export default {
         })
       if (response !== undefined) {
         if (this.signup === true) {
-          alert('The account has been created')
+          alert('The account has been created. You must login to continue')
         } else {
-          localStorage.setItem('jwt', JSON.stringify(response.data.jwt))
+          const item = {
+            value: response.data.jwt,
+            expire: Date.now() + 24 * 60 * 60000
+          }
+          localStorage.setItem('jwt', JSON.stringify(item))
           await this.$router.push('home')
         }
       }
@@ -243,7 +247,7 @@ export default {
 
 <style>
 h1, .start, .button {
-  color: #6200EE;
+  color: #5110e7;
 }
 .start {
   font-size: 18px !important;
@@ -277,6 +281,6 @@ div.v-card.v-sheet.theme--dark {
   color: #FFFFFFB3;
 }
 .v-banner {
-  border-bottom: thin solid #6200EE !important;
+  border-bottom: thin solid #5110e7 !important;
 }
 </style>
