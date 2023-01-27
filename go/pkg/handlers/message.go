@@ -39,7 +39,7 @@ func (h MessageHandler) GetChat(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, nil)
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{"user": map[string]interface{}{"id": id2, "login": login},
-		"chatID": chatID, "chats": messages})
+		"chat": messages})
 }
 
 func (h MessageHandler) GetChatsPreview(c echo.Context) error {
@@ -59,24 +59,24 @@ func (h MessageHandler) GetChatsPreview(c echo.Context) error {
 		if err != nil {
 			s = 1
 		}
-		messageId := msg.ID
+		messageID := msg.ID
 
-		senderId := 0
+		senderID := 0
 
-		if chats[i].User_ID1 != id {
-			senderId = chats[i].User_ID1
+		if chats[i].UserID1 != id {
+			senderID = chats[i].UserID1
 		} else {
-			senderId = chats[i].User_ID2
+			senderID = chats[i].UserID2
 		}
 
-		senderId, senderLogin, err := user.UserRepository.GetById(senderId)
+		senderID, senderLogin, err := user.UserRepository.GetById(senderID)
 
 		if err != nil {
 			return err
 		}
 
-		chatPreviews[i] = map[string]interface{}{"chatId": chats[i].ID, "messageId": messageId,
-			"senderLogin": senderLogin, "senderId": senderId, "text": text, "time": time[s]}
+		chatPreviews[i] = map[string]interface{}{"id": chats[i].ID, "messageID": messageID,
+			"senderID": senderID, "senderLogin": senderLogin, "text": text, "time": time[s]}
 	}
 
 	return c.JSON(http.StatusOK, chatPreviews)

@@ -1,7 +1,7 @@
 package models
 
 type Social struct {
-	User_ID1 int
-	User_ID2 int
-	Status   int
+	UserID1 int
+	UserID2 int
+	Status  int
 }

@@ -23,7 +23,7 @@ func (s SocialRepository) Friend(id1, id2 int) bool {
 	if s.getStatus(id1, id2, 1, social) {
 		return false
 	} else {
-		social = models.Social{User_ID1: id1, User_ID2: id2, Status: 1}
+		social = models.Social{UserID1: id1, UserID2: id2, Status: 1}
 		s.DB.Create(&social)
 		return true
 	}
@@ -39,7 +39,7 @@ func (s SocialRepository) Block(id1, id2 int) bool {
 			Updates(map[string]interface{}{"status": 0})
 		return true
 	} else {
-		social = models.Social{User_ID1: id1, User_ID2: id2, Status: 0}
+		social = models.Social{UserID1: id1, UserID2: id2, Status: 0}
 		s.DB.Create(&social)
 		return true
 	}

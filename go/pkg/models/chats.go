@@ -1,7 +1,7 @@
 package models
 
 type Chat struct {
-	ID       int
-	User_ID1 int
-	User_ID2 int
+	ID      int
+	UserID1 int
+	UserID2 int
 }

@@ -2,6 +2,7 @@ package connect
 
 import (
 	_ "Web-chat/config"
+	"Web-chat/pkg/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"os"
@@ -16,4 +17,9 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	autoMigrate(DB)
+}
+
+func autoMigrate(DB *gorm.DB) {
+	DB.AutoMigrate(&models.Chat{}, &models.Message{}, &models.Social{}, &models.User{})
 }

@@ -3,9 +3,50 @@
     color="grey lighten-4"
     tile
   >
+    <v-navigation-drawer
+      v-model="toggle"
+      absolute
+      temporary
+      hide-overlay
+    >
+      <v-list-item>
+        <v-list-item-avatar>
+          <v-img src="https://randomuser.me/api/portraits/men/78.jpg"></v-img>
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title>John Leider</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-divider></v-divider>
+
+      <v-list dense>
+        <v-list-item
+          v-for="item in items"
+          :key="item.title"
+          link
+        >
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+
+      <template v-slot:append>
+        <div class="pa-2">
+          <v-btn block color=#5110e7 @click="logout">
+            Logout
+          </v-btn>
+        </div>
+      </template>
+    </v-navigation-drawer>
     <div>
       <v-toolbar class="tb1">
-        <v-app-bar-nav-icon></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon @click.stop="toggle = !toggle"></v-app-bar-nav-icon>
         <v-autocomplete
           clearable
           hide-details
@@ -84,6 +125,11 @@ export default {
       menu: false,
       loading: false,
       search: null,
+      toggle: false,
+      items: [
+        { title: 'Account', icon: 'mdi-account-box' },
+        { title: 'About', icon: 'mdi-forum' }
+      ],
       users: []
     }
   },
@@ -107,6 +153,10 @@ export default {
     },
     block (v) {
       this.$emit('block', v)
+    },
+    logout () {
+      localStorage.removeItem('jwt')
+      this.$router.push('/')
     },
     async findUser (login) {
       this.loading = true
@@ -185,6 +235,9 @@ export default {
 .block {
   margin-right: 8%;
 }
+.pa-2 {
+  padding-top: 270% !important;
+}
 .row {
   flex: 1 0 4% !important;
 }
@@ -199,5 +252,8 @@ export default {
 }
 .row {
   margin: 0 !important;
+}
+.v-navigation-drawer {
+  height: auto !important;
 }
 </style>

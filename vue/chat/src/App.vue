@@ -24,8 +24,8 @@ export default {
 </script>
 
 <style>
-::-webkit-scrollbar {display:none;}
 .v-main {
   background-color: #1E1E1E;
 }
+html { overflow-y: auto }
 </style>

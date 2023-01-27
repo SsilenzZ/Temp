@@ -28,25 +28,42 @@
     <v-divider></v-divider>
 
     <v-tabs-items v-model="tab">
-      <v-tab-item
-        :value="'tab-2'"
-      >
-        <v-list>
-          <template v-for="(item, id) in friends">
-            <v-subheader
-              v-if="item.header"
-              :key="item.header"
-              v-text="item.header"
-            ></v-subheader>
+      <v-tab-item :value="'tab-1'">
+        <v-list two-line>
+          <template v-for="chatsPreview in chatsPreview">
+            <v-list-item
+              :key="chatsPreview.id"
+              :class="chatsPreview.id === chatID ? 'active-chat' : null"
+              @click="openChatBox(chatsPreview.id); getChatMessages(chatsPreview.senderID)"
+            >
+              <v-list-item-avatar
+                color=#5110e7
+                class="text-h5 font-weight-light white--text"
+              >
+                {{ chatsPreview.senderLogin.charAt(0) }}
+              </v-list-item-avatar>
+
+              <v-list-item-content>
+                <v-list-item-title v-text="chatsPreview.senderLogin"></v-list-item-title>
+                <v-list-item-subtitle v-text="chatsPreview.text"></v-list-item-subtitle>
+                <v-list-item-subtitle v-text="chatsPreview.time"></v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
 
             <v-divider
-              v-else-if="item.divider"
-              :key="id"
-              :inset="item.inset"
-            ></v-divider>
+              :key="chatsPreview.chatID"
+              dark
+            >
+            </v-divider>
 
+          </template>
+        </v-list>
+      </v-tab-item>
+
+      <v-tab-item :value="'tab-2'">
+        <v-list>
+          <template v-for="(item, id) in friends">
             <v-list-item
-              v-else
               :key="item.title"
             >
               <v-list-item-avatar
@@ -74,7 +91,6 @@
 
             <v-divider
               :key="id"
-              inset
               dark
             >
             </v-divider>
@@ -82,25 +98,13 @@
           </template>
         </v-list>
       </v-tab-item>
+
       <v-tab-item
         :value="'tab-3'"
       >
         <v-list>
           <template v-for="(item, id) in blacklist">
-            <v-subheader
-              v-if="item.header"
-              :key="item.header"
-              v-text="item.header"
-            ></v-subheader>
-
-            <v-divider
-              v-else-if="item.divider"
-              :key="id"
-              :inset="item.inset"
-            ></v-divider>
-
             <v-list-item
-              v-else
               :key="item.title"
             >
               <v-list-item-avatar
@@ -128,7 +132,6 @@
 
             <v-divider
               :key="id"
-              inset
               dark
             >
             </v-divider>
@@ -148,11 +151,12 @@ export default {
 
   data () {
     return {
+      open: false,
       tab: null
     }
   },
 
-  props: ['jwt', 'blacklist', 'friends'],
+  props: ['jwt', 'blacklist', 'friends', 'chatsPreview', 'chatID'],
 
   methods: {
     removeFriend (v) {
@@ -161,6 +165,14 @@ export default {
 
     unblock (v) {
       this.$emit('unblock', v)
+    },
+
+    openChatBox (v) {
+      this.$emit('openChatBox', v)
+    },
+
+    getChatMessages (v) {
+      this.$emit('getChatMessages', v)
     },
 
     async unfriendUser (id) {
@@ -217,8 +229,11 @@ export default {
   flex: 1 0 49%;
   padding: 0 16px;
 }
+.active-chat {
+  background-color: #272727;
+}
 .v-list-item__avatar {
-  padding-left: 25px !important;
+  padding-left: 20px !important;
   width: 60px !important;
   height: 60px !important;
   font-size: 2rem !important;

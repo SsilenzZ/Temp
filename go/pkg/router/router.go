@@ -8,7 +8,7 @@ import (
 )
 
 func New(authHandler *handlers.AuthHandler, userHandler *handlers.UserHandler, socialHandler *handlers.SocialHandler,
-	wsHandler *handlers.WsHandler, msgHandler *handlers.MessageHandler) *echo.Echo {
+	msgHandler *handlers.MessageHandler) *echo.Echo {
 	e := echo.New()
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -18,7 +18,7 @@ func New(authHandler *handlers.AuthHandler, userHandler *handlers.UserHandler, s
 
 	e.POST("/sign-up", authHandler.SignUp)
 	e.POST("/sign-in", authHandler.SignIn)
-	e.GET("/ws/:Authorization", wsHandler.Websocket)
+	e.GET("/ws/:Authorization", handlers.Websocket)
 
 	j := e.Group("/jwt")
 	config := middleware.JWTConfig{
@@ -28,6 +28,7 @@ func New(authHandler *handlers.AuthHandler, userHandler *handlers.UserHandler, s
 
 	j.Use(middleware.JWTWithConfig(config))
 	j.POST("/find", userHandler.Find)
+	j.GET("/id", userHandler.ReturnID)
 
 	j.POST("/friend", socialHandler.Friend)
 	j.POST("/unfriend", socialHandler.Unfriend)
@@ -36,7 +37,7 @@ func New(authHandler *handlers.AuthHandler, userHandler *handlers.UserHandler, s
 	j.POST("/unblock", socialHandler.Unblock)
 	j.GET("/blacklist", socialHandler.GetBlacklist)
 
-	j.GET("/chats/:id", msgHandler.GetChat)
+	j.GET("/chat/:id", msgHandler.GetChat)
 	j.GET("/chatspreview", msgHandler.GetChatsPreview)
 
 	return e

@@ -7,12 +7,13 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"strconv"
 )
 
 type UserHandler struct {
 }
 
-func (h UserHandler) Find(c echo.Context) error {
+func (u UserHandler) Find(c echo.Context) error {
 	var user_ requests.Find
 	cUser := c.Get("user").(*jwt.Token)
 	claims := cUser.Claims.(*services.JWTCustomClaims)
@@ -31,4 +32,12 @@ func (h UserHandler) Find(c echo.Context) error {
 		users[i] = map[string]interface{}{"id": foundUsers[i].ID, "name": foundUsers[i].Name}
 	}
 	return c.JSON(http.StatusOK, users)
+}
+
+func (u UserHandler) ReturnID(c echo.Context) error {
+	cUser := c.Get("user").(*jwt.Token)
+	claims := cUser.Claims.(*services.JWTCustomClaims)
+	id := claims.ID
+
+	return c.String(http.StatusOK, strconv.Itoa(id))
 }

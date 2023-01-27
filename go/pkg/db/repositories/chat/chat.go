@@ -20,8 +20,8 @@ func (c ChatRepository) GetChatID(id1, id2 int) int {
 	var chat models.Chat
 	if c.DB.Where("user_id1 = ? AND user_id2 = ? OR user_id1 = ? AND user_id2 = ?", id1, id2, id2, id1).
 		Take(&chat).Error != nil {
-		chat.User_ID1 = id1
-		chat.User_ID2 = id2
+		chat.UserID1 = id1
+		chat.UserID2 = id2
 		c.DB.Create(&chat)
 		return chat.ID
 	}

@@ -4,27 +4,22 @@ import (
 	"Web-chat/pkg/services"
 	"github.com/labstack/echo/v4"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
 )
 
-type WsHandler struct {
-	Wsocket services.WebSocketI
-}
-
-func NewWsHandler(wsocket services.WebSocketI) WsHandler {
-	return WsHandler{Wsocket: wsocket}
-}
-
-func (h WsHandler) Websocket(c echo.Context) error {
+func Websocket(c echo.Context) error {
+	log.Print("It works!!!!!")
 	req, err := http.NewRequest("GET", "http://localhost"+os.Getenv("SERVER_PORT")+"/jwt/id", nil)
 	if err != nil {
 		c.Logger().Error(err)
 		return err
 	}
 
-	req.Header.Set("Authorization", "Bearer "+c.Param("Authorization"))
+	token := c.Param("Authorization")
+	req.Header.Set("Authorization", "Bearer "+token[1:])
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -59,7 +54,7 @@ func (h WsHandler) Websocket(c echo.Context) error {
 	} else {
 		services.Clients[id] = &services.ClientConn{Conn: ws, Requests: 0}
 	}
-	defer h.Wsocket.CloseConn(id)
+	defer services.CloseConn(id)
 
 	for {
 		var msg services.ChatMessage
@@ -68,7 +63,7 @@ func (h WsHandler) Websocket(c echo.Context) error {
 			c.Logger().Error(err)
 			break
 		}
-		if msg.Text == "ping" || msg.ReceiverId == 0 {
+		if msg.Text == "ping" || msg.ReceiverID == 0 {
 			err := ws.WriteJSON(map[string]interface{}{"code": 1, "text": "pong"})
 			if err != nil {
 				c.Logger().Error(err)
@@ -76,7 +71,7 @@ func (h WsHandler) Websocket(c echo.Context) error {
 			}
 			continue
 		}
-		msg.SenderId = id
+		msg.SenderID = id
 		services.MessageChannel <- msg
 	}
 	return err

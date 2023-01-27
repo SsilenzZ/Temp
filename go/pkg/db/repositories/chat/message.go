@@ -27,8 +27,8 @@ func (m MessageRepository) GetLastChatMessage(id int) (models.Message, error) {
 	return msg, err
 }
 
-func (m *MessageRepository) SendMessage(chatId, userId int, text string) models.Message {
-	msg := models.Message{ChatID: chatId, SenderID: userId, Text: text}
+func (m *MessageRepository) SendMessage(chatID, userID int, text string) models.Message {
+	msg := models.Message{ChatID: chatID, SenderID: userID, Text: text}
 	m.DB.Create(&msg)
 	return msg
 }

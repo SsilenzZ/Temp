@@ -96,7 +96,7 @@ func (s SocialHandler) GetFriends(c echo.Context) error {
 
 	for i := 0; i < len(friends); i++ {
 		res[i] = make(map[string]interface{})
-		res[i]["id"], res[i]["name"], err = user.UserRepository.GetById(friends[i].User_ID2)
+		res[i]["id"], res[i]["name"], err = user.UserRepository.GetById(friends[i].UserID2)
 	}
 
 	if err != nil {
@@ -117,7 +117,7 @@ func (s SocialHandler) GetBlacklist(c echo.Context) error {
 
 	for i := 0; i < len(friends); i++ {
 		res[i] = make(map[string]interface{})
-		res[i]["id"], res[i]["name"], err = user.UserRepository.GetById(friends[i].User_ID2)
+		res[i]["id"], res[i]["name"], err = user.UserRepository.GetById(friends[i].UserID2)
 	}
 
 	if err != nil {
